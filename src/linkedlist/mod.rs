@@ -1,6 +1,5 @@
 pub struct LinkedList {
     head: Option<Box<ListNode>>,
-    len: u32,
 }
 
 struct ListNode {
@@ -12,13 +11,11 @@ impl LinkedList {
     pub fn new() -> Self {
         Self {
             head: None,
-            len: 0,
         }
     }
 
     pub fn push_back(&mut self, val: i32) {
         eprintln!("Pushing {}", val);
-        // keep track of
         let mut curr_node = &mut self.head;
         loop {
             match curr_node {
@@ -27,7 +24,6 @@ impl LinkedList {
                     *curr_node = Some(
                         Box::new(ListNode::new(val))
                     );
-                    self.len += 1;
                     return;
                 }
                 Some(node) => {
@@ -42,12 +38,30 @@ impl LinkedList {
         Self::pop_back_link(&mut self.head)
     }
 
-    fn pop_back_link(curr_node: &mut Option<Box<ListNode>>) -> Option<i32> {
-        // ... -> a -> {node} -> Nil
-        //     root -> {node} -> Nil
-        //             {root} -> Nil
-        //                       Nil
+    pub fn push_front(&mut self, val: i32) {
+        eprintln!("Pushing {}", val);
+        let mut new_node = Box::new(ListNode::new(val));
+        // replace self.head to None for exception safety
+        new_node.next = std::mem::replace(&mut self.head, None);
+        self.head = Some(new_node);
+    }
 
+    pub fn pop_front(&mut self) -> Option<i32> {
+        match std::mem::replace(&mut self.head, None) {
+            None => {
+                eprintln!("Nothing to pop!");
+                None
+            }
+
+            Some(front_node) => {
+                let val = front_node.val;
+                self.head = front_node.next;
+                Some(val)
+            }
+        }
+    }
+
+    fn pop_back_link(curr_node: &mut Option<Box<ListNode>>) -> Option<i32> {
         // check if there is a list to traverse
         match curr_node {
             // no node to pop
@@ -78,7 +92,6 @@ impl Default for LinkedList {
     fn default() -> Self {
         Self {
             head: None,
-            len: 0,
         }
     }
 }

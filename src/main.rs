@@ -9,24 +9,38 @@ fn main() {
     println!("Basic Linked List!");
     let mut input: i32;
     loop {
-        print!("\t1. push\n\t2. pop\n\t3. exit\ninput: ");
+        print!("0. exit        \n\
+                1. push_back   \n\
+                2. pop_back    \n\
+                3. push_front  \n\
+                4. pop_front   \n\
+                :    ==> ");
         io::stdout().flush().unwrap();
-        input = read_int().unwrap_or(3);
+        input = read_int().unwrap_or(0);
 
         match &input {
+           0 => break,
            1 => {
             print!("Enter value to push: ");
             io::stdout().flush().unwrap();
             match read_int() {
                 Some(val) => l.push_back(val),
-                None => break,
+                None => continue,
             }
            },
            2 => drop(l.pop_back()),
-           3 => break,
+           3 => {
+            print!("Enter value to push: ");
+            io::stdout().flush().unwrap();
+            match read_int() {
+                Some(val) => l.push_front(val),
+                None => continue,
+            }
+           },
+           4 => drop(l.pop_front()),
            _ => {}
         }
-        println!("\nLinkedList: {{ {} }}\n", l);
+        println!("\n  {{ {} }}\n", l);
     }
 }
 
